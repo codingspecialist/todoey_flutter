@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:todoey_flutter/models/task.dart';
 import 'package:todoey_flutter/widgets/tasks_list.dart';
 
 import 'add_task_screen.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
+  @override
+  _TasksScreenState createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  List<Task> tasks = [
+    Task(name: 'Buy milk', isDone: false),
+    Task(name: 'Buy eggs', isDone: false),
+    Task(name: 'Buy bread', isDone: true),
+  ];
+
   @override
   Widget build(BuildContext context) {
     MediaQuery.of(context).removeViewPadding(removeBottom: true);
@@ -13,7 +25,8 @@ class TasksScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top: 60.0, left: 30.0, right: 30.0, bottom: 100.0),
+            padding: EdgeInsets.only(
+                top: 60.0, left: 30.0, right: 30.0, bottom: 100.0),
             child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,9 +68,12 @@ class TasksScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0)),
               ),
-              child: TaskList(),
+              child: TaskList(
+                tasks: tasks,
+              ),
             ),
           )
         ],
@@ -71,10 +87,19 @@ class TasksScreen extends StatelessWidget {
                 print(MediaQuery.of(context).viewInsets.bottom);
                 return SingleChildScrollView(
                     child: Container(
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: AddTaskScreen(),
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: AddTaskScreen(
+                    callBack: (newTaskTitle) {
+                      setState(() {
+                        tasks.add(Task(name: newTaskTitle, isDone: false));
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
                 ));
               });
+
         },
         backgroundColor: Colors.lightBlueAccent,
         child: Icon(Icons.add),
