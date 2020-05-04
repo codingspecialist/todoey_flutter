@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:todoey_flutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/task_data.dart';
 
 class AddTaskScreen extends StatelessWidget {
-
-  final Function callBack;
-
-  const AddTaskScreen({Key key, this.callBack}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-
     String newTaskTitle;
 
     return Container(
@@ -16,38 +13,43 @@ class AddTaskScreen extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(20.0),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
-            )),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
               'Add Task',
-              style: TextStyle(fontSize: 30.0, color: Colors.lightBlueAccent),
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.lightBlueAccent,
+              ),
             ),
             TextField(
               autofocus: true,
               textAlign: TextAlign.center,
-              onChanged: (newText){
+              onChanged: (newText) {
                 newTaskTitle = newText;
               },
-            ),
-            SizedBox(
-              height: 10.0,
             ),
             FlatButton(
               child: Text(
                 'Add',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
               color: Colors.lightBlueAccent,
-              onPressed: (){
-                callBack(newTaskTitle);
-              }
+              onPressed: () {
+                // TaskData의 addTask함수를 호출한 뒤 addTaskSceen위젯의 변경이 필요없기에 listen: false로 한다.
+                Provider.of<TaskData>(context, listen: false).addTask(newTaskTitle);
+                Navigator.pop(context);
+              },
             ),
           ],
         ),
